@@ -82,7 +82,8 @@ class WKRDecentralizeCentral(threading.Thread):
         
         self.args = args
         self.logdir = args.log_dir
-        self.logger = set_logger(colored('CENTRAL', 'red'), logger_dir=self.logdir)
+        self.logname = args.log_name
+        self.logger = set_logger(colored('CENTRAL', 'red'), logger_dir=self.logdir, logger_name=self.logname)
         self.port = args.port
         self.port_out = args.port_out
         self.number_client = args.num_client
@@ -193,7 +194,7 @@ class WKRDecentralizeCentral(threading.Thread):
     @zmqd.socket(zmq.PULL)
     @zmqd.socket(zmq.PUSH)
     def _run(self, _, frontend, sender):
-        logger = set_logger(colored('CENTRAL', 'red'), logger_dir=self.logdir)
+        logger = set_logger(colored('CENTRAL', 'red'), logger_dir=self.logdir, logger_name=self.logname)
 
         self.logger.info('bind all sockets')
         frontend.bind('tcp://*:%d' % self.port)

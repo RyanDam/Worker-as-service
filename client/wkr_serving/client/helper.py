@@ -47,12 +47,13 @@ def get_redis_connection(ip, port, db=0, password=None):
     redis_server = redis.StrictRedis(host=ip, port=int(port), db=0, password=password)
     return redis_server
 
-def set_logger(context, logger_dir=None, verbose=False, error_log=False):
+def set_logger(context, logger_dir=None, logger_name=None, verbose=False, error_log=False):
     if os.name == 'nt':  # for Windows
         return NTLogger(context, verbose)
 
     logger = logging.getLogger(context)
     logger.setLevel(logging.DEBUG if verbose else logging.INFO)
+    logger_name = logger_name if logger_name else 'WKRClient'
 
     if verbose:
         formatter = logging.Formatter(
@@ -64,7 +65,7 @@ def set_logger(context, logger_dir=None, verbose=False, error_log=False):
         '%y-%m-%d %H:%M:%S')
     
     if logger_dir:
-        file_name = os.path.join(logger_dir, 'WKRClient_{:%Y-%m-%d}.{}'.format(datetime.now(), "err" if error_log else "log"))
+        file_name = os.path.join(logger_dir, '{}_{:%Y-%m-%d}.{}'.format(logger_name, datetime.now(), "err" if error_log else "log"))
 
         print(file_name)
 
@@ -79,9 +80,9 @@ def set_logger(context, logger_dir=None, verbose=False, error_log=False):
     return logger
 
 class LoggerSeperate():
-    def __init__(self, name, color, logger_dir=None, verbose=False):
-        self.logger_info = set_logger(colored(name, color), logger_dir=logger_dir, verbose=verbose)
-        self.logger_erro = set_logger(colored('{}-ERROR'.format(name), color), logger_dir=logger_dir, verbose=verbose, error_log=True)
+    def __init__(self, name, color, logger_dir=None, logger_name=None, verbose=False):
+        self.logger_info = set_logger(colored(name, color), logger_dir=logger_dir, logger_name=logger_name, verbose=verbose)
+        self.logger_erro = set_logger(colored('{}-ERROR'.format(name), color), logger_dir=logger_dir, logger_name=logger_name, verbose=verbose, error_log=True)
 
     def info(self, msg, **kwargs):
         self.logger_info.info(msg, **kwargs)
@@ -169,6 +170,8 @@ def get_args_parser():
                         help="str value of array of remote servers: [<ip_addr>, <port_in>, <port_out>], ex: [['localhost', 8888, 8889], ['10.40.34.15', 9888, 9889]]")
     parser.add_argument('-log_dir', type=str, default=None,
                         help='directory for logging')
+    parser.add_argument('-log_name', type=str, default=None,
+                        help='filename for logging')
     parser.add_argument('-timeout', type=int, default=5000,
                         help='timeout (ms) for connecting to a server')
     return parser

@@ -54,7 +54,7 @@ class BertHTTPProxy(Process):
         super().__init__()
         self.args = args
         self.is_ready = Event()
-        self.logger = set_logger(colored('PROXY', 'red'), logger_dir=args.log_dir, verbose=args.verbose)
+        self.logger = set_logger(colored('PROXY', 'red'), logger_dir=args.log_dir, logger_name=args.log_name, verbose=args.verbose)
 
     def create_flask_app(self, args):
         try:
@@ -74,7 +74,7 @@ class BertHTTPProxy(Process):
                                   port=self.args.port, port_out=self.args.port_out,
                                   protocol='obj', ignore_all_checks=True)
 
-        logger = set_logger(colored('PROXY', 'red'), logger_dir=args.log_dir, verbose=args.verbose)
+        logger = set_logger(colored('PROXY', 'red'), logger_dir=args.log_dir, logger_name=args.log_name, verbose=args.verbose)
 
         if os.path.isdir(self.args.http_stat_dashboard):
             app = Flask(__name__, template_folder=self.args.http_stat_dashboard, static_folder=self.args.http_stat_dashboard)
