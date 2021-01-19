@@ -55,7 +55,8 @@ class WKRWorkerSkeleton(Process):
         self.is_ready = multiprocessing.Event()
 
         self.logdir = args.log_dir
-        self.logger = set_logger(colored('%s-%s' % (self.name, str(self.worker_id)), self.color), logger_dir=self.logdir, verbose=self.verbose)
+        self.logname = args.log_name
+        self.logger = set_logger(colored('%s-%s' % (self.name, str(self.worker_id)), self.color), logger_dir=self.logdir, logger_name=self.logname, verbose=self.verbose)
 
     def close(self):
         self.logger.info('shutting down...')
@@ -98,7 +99,7 @@ class WKRWorkerSkeleton(Process):
     def new_logger(self):
         name = '%s-%s' % (self.name, str(self.worker_id))
         color = self.color
-        return LoggerSeperate(name, color, logger_dir=self.logdir, verbose=self.verbose)
+        return LoggerSeperate(name, color, logger_dir=self.logdir, logger_name=self.logname, verbose=self.verbose)
 
     def run(self):
         self._run()

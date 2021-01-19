@@ -57,7 +57,8 @@ class WKRSink(Process):
         self.util_history = []
 
         self.logdir = args.log_dir
-        self.logger = set_logger(colored('SINK', 'green'), logger_dir=self.logdir, verbose=args.verbose)
+        self.logname = args.log_name
+        self.logger = set_logger(colored('SINK', 'green'), logger_dir=self.logdir, logger_name=self.logname, verbose=args.verbose)
 
     def close(self):
         self.logger.info('shutting down...')
@@ -160,8 +161,8 @@ class WKRSink(Process):
         
         # Windows does not support logger in MP environment, thus get a new logger
         # inside the process for better compability
-        logger = set_logger(colored('SINK', 'green'), logger_dir=self.logdir, verbose=self.verbose)
-        logger_error = set_logger(colored('SINK-ERROR', 'red'), logger_dir=self.logdir, verbose=self.verbose, error_log=True)
+        logger = set_logger(colored('SINK', 'green'), logger_dir=self.logdir, logger_name=self.logname, verbose=self.verbose)
+        logger_error = set_logger(colored('SINK-ERROR', 'red'), logger_dir=self.logdir, logger_name=self.logname, verbose=self.verbose, error_log=True)
         logger.info('ready')
         self.is_ready.set()
 

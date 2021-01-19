@@ -81,7 +81,8 @@ class WKRServer(threading.Thread):
 
         # logging 
         self.logdir = args.log_dir
-        self.logger = set_logger(colored('NAVIGATOR', 'red'), logger_dir=self.logdir, verbose=args.verbose)
+        self.logname = args.log_name
+        self.logger = set_logger(colored('NAVIGATOR', 'red'), logger_dir=self.logdir, logger_name=self.logname, verbose=args.verbose)
         self.server_all_terminated = False
 
         self.is_ready = threading.Event()
