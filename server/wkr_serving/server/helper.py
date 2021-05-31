@@ -178,11 +178,13 @@ def get_args_parser():
                         help='server port for receiving data from client')
     group3.add_argument('-port_out', '-port_result', type=int, required=True,
                         help='server port for sending result to client')
+
     group3.add_argument('-http_port', type=int, default=None,
+                        help='server port for receiving HTTP requests')
+    group3.add_argument('-http_new', action='store_true', default=False,
                         help='server port for receiving HTTP requests')
     group3.add_argument('-http_max_connect', type=int, default=20,
                         help='maximum number of concurrent HTTP connections')
-
     group3.add_argument('-http_concurent_retry_num', type=int, default=100,
                         help='maximum number of try to get concurrent HTTP connections')
     group3.add_argument('-http_concurent_retry_gap', type=float, default=0.05,

@@ -21,7 +21,6 @@ from zmq.utils import jsonapi
 
 from .helper import *
 from .protocol import *
-from .http import BertHTTPProxy
 from .zmq_decor import multi_socket
 
 from .postsink import WKRSink
@@ -32,18 +31,28 @@ __all__ = ['__version__', 'WKRServer', 'WKRHardWorker']
 __version__ = '2.0.1'
 
 class WKRServer(threading.Thread):
-    def __init__(self, args, hardprocesser=None, httpprocessor=None):
+    def __init__(self, args, hardprocesser=None, httpprocessor=None, http_api_appender=None):
         super().__init__()
         
         if hardprocesser is None:
             hardprocesser = WKRHardWorker
 
-        if httpprocessor is None:
-            httpprocessor = BertHTTPProxy
-
         self.hardprocessor_skeleton = hardprocesser
         if not issubclass(self.hardprocessor_skeleton, WKRHardWorker):
             raise AssertionError('hardprocesser must inherit from class WKRHardWorker')
+
+        if httpprocessor is None:
+            if args.http_new:
+                from .http import BertHTTPProxy as FastAPIHTTPProxy
+                httpprocessor = FastAPIHTTPProxy
+                args.http_api_appender = http_api_appender
+            else:
+                if http_api_appender != None:
+                    raise Exception("'http_api_appender' can NOT be used when using legacy http, define '-http_new' to force using new http proxy")
+                from .http_legacy import BertHTTPProxy as FlaskHTTPProxy
+                httpprocessor = FlaskHTTPProxy
+        elif http_api_appender != None:
+            raise Exception("'http_api_appender' can NOT be used when using custom 'httpprocessor'")
 
         self.httpprocessor_skeleton = httpprocessor
 
@@ -64,6 +73,7 @@ class WKRServer(threading.Thread):
         self.transfer_protocol = args.protocol
 
         self.status_args = {k: v for k, v in sorted(vars(args).items())}
+        self.status_args.pop('http_api_appender', 'None')
         self.status_static = {
             'python_version': sys.version,
             'server_version': __version__,
@@ -263,9 +273,12 @@ class WKRServer(threading.Thread):
                                         'main_batch_size': self.batch_size,
                                         'protocol': self.transfer_protocol,
                                         'num_concurrent_socket': self.total_concurrent_socket}
-                        sink.send_multipart([client, msg, jsonapi.dumps({**status_runtime,
-                                                                        **self.status_args,
-                                                                        **self.status_static}), req_id])
+                        grant_status = {
+                            **status_runtime,
+                            **self.status_args,
+                            **self.status_static
+                        }
+                        sink.send_multipart([client, msg, jsonapi.dumps(grant_status), req_id])
                     else:
                         self.logger.info('new encode request\treq id: %s\tclient: %s' %
                                         (str(req_id), client))
