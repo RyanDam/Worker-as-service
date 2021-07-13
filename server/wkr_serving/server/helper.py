@@ -183,7 +183,7 @@ def get_args_parser():
                         help='server port for receiving HTTP requests')
     group3.add_argument('-http_new', action='store_true', default=False,
                         help='server port for receiving HTTP requests')
-    group3.add_argument('-http_max_connect', type=int, default=20,
+    group3.add_argument('-http_max_connect', type=int, default=100,
                         help='maximum number of concurrent HTTP connections')
     group3.add_argument('-http_concurent_retry_num', type=int, default=100,
                         help='maximum number of try to get concurrent HTTP connections')
@@ -229,7 +229,7 @@ def import_tf(device_id=-1, verbose=False, use_fp16=False):
         pass
     return tf
 
-def import_torch(device_id=-1, verbose=False, use_fp16=False, enable_benchmark=True, reduce_thread=False):
+def import_torch(device_id=-1, verbose=False, use_fp16=False, enable_benchmark=False, reduce_thread=False):
     # assert device_id >= 0, 'WaveGlow can only on GPU'
     os.environ['CUDA_VISIBLE_DEVICES'] = str(device_id)
     import torch

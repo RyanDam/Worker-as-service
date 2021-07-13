@@ -96,7 +96,7 @@ class BertHTTPProxy(Process):
                 status = {}
             return status
 
-        app.mount('/tmp/', StaticFiles(directory="/tmp/"), name="temp")
+        # app.mount('/tmp/', StaticFiles(directory="/tmp/"), name="temp")
 
         async def valid_content_length(content_length: int = Header(..., lt=5_242_880)):
             return content_length

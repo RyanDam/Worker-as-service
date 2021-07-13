@@ -198,6 +198,7 @@ class WKRSink(Process):
                         logger.info('Update statistic\tjob id: {}#{}'.format(client, req_id))
                     else:
                         # main processing flow
+                        # _start_stat = time.time()
                         if msg_info == ServerCmd.exception:
                             # exception
                             logger_error.error("exception processing {}#{}\n{}".format(client, req_id, msg))
@@ -216,9 +217,14 @@ class WKRSink(Process):
                                 to_bytes(req_id), 
                                 b'1'
                             ])
-                        sink_status.update_key('sys_output_byte', len(msg))
+                        # sink_status.update_key('sys_output_byte', len(msg))
+                        # _end_stat = time.time()
+                        # logger.warning(f"stat: {_end_stat-_start_stat}s")
 
+                        # _start = time.time()
                         send_to_next_raw(client, req_id, msg, msg_info, sender)
+                        # logger.warning(f"sent: {time.time()-_start}s")
+                        # logger.warning(f"hwm: {sender.get_hwm()}s")
 
                         # update latency
                         job_id = to_str(client) + '#' + to_str(req_id)

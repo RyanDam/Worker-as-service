@@ -33,7 +33,7 @@ setup(
         'flask', 
         'flask-compress', 
         'flask-cors', 
-        'flask-json'
+        'flask-json',
     ],
     classifiers=(
         'Programming Language :: Python :: 3.6',

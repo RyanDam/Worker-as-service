@@ -20,7 +20,7 @@ from .decentralizedworker import *
 __all__ = ['__version__', 'WKRClient', 'ConcurrentWKRClient', 'WKRWorker', 'WKRDecentralizeCenter']
 
 # in the future client version must match with server version
-__version__ = '1.0.0-b'
+__version__ = '2.1.0'
 
 if sys.version_info >= (3, 0):
     from ._py3_var import *
@@ -128,10 +128,11 @@ class WKRClient(object):
         """
             Gently close all connections of the client. If you are using WKRClient as context manager,
             then this is not necessary.
-
         """
-        self.sender.close()
-        self.receiver.close()
+        # self.sender.close()
+        # self.receiver.close()
+        self.sender.close(0)
+        self.receiver.close(0)
         self.context.term()
 
     def _send(self, msg, target_request_id=None):
@@ -223,8 +224,10 @@ class WKRClient(object):
         def arg_wrapper(self, *args, **kwargs):
             if 'blocking' in kwargs and not kwargs['blocking']:
                 # override client timeout setting if `func` is called in non-blocking way
+                self.sender.setsockopt(zmq.SNDTIMEO, -1)
                 self.receiver.setsockopt(zmq.RCVTIMEO, -1)
             else:
+                self.sender.setsockopt(zmq.SNDTIMEO, self.timeout)
                 self.receiver.setsockopt(zmq.RCVTIMEO, self.timeout)
             try:
                 return func(self, *args, **kwargs)
@@ -240,6 +243,7 @@ class WKRClient(object):
                 else:
                     _raise(t_e, _e)
             finally:
+                self.sender.setsockopt(zmq.SNDTIMEO, -1)
                 self.receiver.setsockopt(zmq.RCVTIMEO, -1)
 
         return arg_wrapper
@@ -364,9 +368,11 @@ class WKRClient(object):
             print('%30s\t=\t%-30s' % (k, v))
 
     def __enter__(self):
+        print('begin', self.identity)
         return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):
+        print('end', self.identity, exc_type, exc_val, exc_tb)
         self.close()
 
 

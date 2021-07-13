@@ -28,7 +28,7 @@ from .hard_worker import WKRHardWorker
 from .statistic import ServerStatistic
 
 __all__ = ['__version__', 'WKRServer', 'WKRHardWorker']
-__version__ = '2.0.1'
+__version__ = '2.1.0'
 
 class WKRServer(threading.Thread):
     def __init__(self, args, hardprocesser=None, httpprocessor=None, http_api_appender=None):
