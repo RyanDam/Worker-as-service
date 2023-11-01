@@ -103,8 +103,8 @@ if __name__ == "__main__":
 
     args = get_args_parser().parse_args([
         '-protocol', 'obj',
-        '-model_dir', '/data1/ailabserver-models/face_service_models',
-        '-model_name', 'mnet_double_10062019_tf19.pb',
+        '-model_dir', '<path to model folder>',
+        '-model_name', '<model file name>',
         '-port_in', '9001',
         '-port_out', '9002',
         '-http_port', '9000',

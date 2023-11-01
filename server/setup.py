@@ -11,12 +11,12 @@ exec(version_line)  # produce __version__
 setup(
     name='wkr_serving_server',
     version=__version__,
-    description='distributed computing framework developed for the uses of Zalo/AILab',
-    url='https://lab.zalo.ai',
+    description='Distributed computing framework developed for the uses of publishing AI Model',
+    url='https://github.com/RyanDam/Worker-as-service',
     long_description=open('README.md', 'r').read(),
     long_description_content_type='text/markdown',
-    author='duydv2',
-    author_email='duydv2@vng.com.vn',
+    author='Ryan Dam',
+    author_email='py.ryan.dam@gmail.com',
     license='MIT',
     packages=find_packages(),
     zip_safe=False,
@@ -46,5 +46,5 @@ setup(
                             'wkr-serving-make=wkr_serving.server.cli:main_make',
                             'wkr-serving-terminate=wkr_serving.server.cli:terminate'],
     },
-    keywords='tts nlp tensorflow machine learning sentence encoding embedding serving',
+    keywords='tts nlp tensorflow machine learning sentence encoding embedding serving pytorch',
 )

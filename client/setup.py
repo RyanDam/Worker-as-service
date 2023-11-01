@@ -14,12 +14,12 @@ with open('requirements.txt') as f:
 setup(
     name='wkr_serving_client',
     version=__version__,  # noqa
-    description='Mapping a variable-length sentence to a fixed-length vector using TTS model (Client)',
-    url='https://github.com/hanxiao/bert-as-service',
+    description='Client interface for Worker-as-service',
+    url='https://github.com/RyanDam/Worker-as-service',
     long_description=open('README.md', 'r').read(),
     long_description_content_type='text/markdown',
-    author='Han Xiao',
-    author_email='artex.xh@gmail.com',
+    author='Ryan Dam',
+    author_email='py.ryan.dam@gmail.com',
     license='MIT',
     packages=find_packages(),
     zip_safe=False,
@@ -38,5 +38,5 @@ setup(
         'Operating System :: OS Independent',
         'Topic :: Scientific/Engineering :: Artificial Intelligence',
     ),
-    keywords='bert nlp tensorflow machine learning sentence encoding embedding serving',
+    keywords='pytorch nlp tensorflow machine learning sentence encoding embedding serving',
 )

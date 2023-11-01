@@ -56,6 +56,6 @@ if __name__ == "__main__":
                                         '-port_out', '21326',
                                         '-num_client', '24',
                                         '-remote_servers', '[["0.0.0.0", {}, {}]]'.format(SERVICE_PUSH_PORT, SERVICE_PULL_PORT),
-                                        '-log_dir', '/data/log/tts_central_staging'])
+                                        '-log_dir', '<path to log dir>'])
     handler = WKRDecentralizeCentral(AIModel, args)
     handler.start()
